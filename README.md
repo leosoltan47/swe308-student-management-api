@@ -2,6 +2,8 @@
 
 Express + MySQL CRUD application for the SWE308 homework due on 06 May 2026.
 
+For a quick explanation of the whole project, read [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md).
+
 ## Features
 
 - Create, read, update, and delete students.

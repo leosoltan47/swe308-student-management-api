@@ -186,6 +186,7 @@ Alex can explain:
 ## Important Files For Another AI
 
 - Start with `README.md`.
+- Use `PROJECT_SUMMARY.md` for the shortest explanation of the project.
 - Use `PRESENTATION.md` for what Alex should say tomorrow.
 - Use `requests.http` for demo requests.
 - Use `REFLECTION.md` for written answers.
