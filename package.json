@@ -1,0 +1,24 @@
+{
+  "name": "swe308-student-management-api",
+  "version": "1.0.0",
+  "description": "SWE308 Express and MySQL Student Management CRUD API homework.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "test": "node --test"
+  },
+  "keywords": [],
+  "author": "Alexei Soltan",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.3"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2"
+  }
+}

@@ -1,0 +1,46 @@
+### Health check
+GET http://localhost:3000/
+
+### Get all students
+GET http://localhost:3000/api/students
+
+### Get student by id
+GET http://localhost:3000/api/students/1
+
+### Create student
+POST http://localhost:3000/api/students
+Content-Type: application/json
+
+{
+  "student_no": "2024004",
+  "first_name": "Ali",
+  "last_name": "Demir",
+  "email": "ali@example.com",
+  "department": "Software Engineering"
+}
+
+### Partial update student
+PUT http://localhost:3000/api/students/1
+Content-Type: application/json
+
+{
+  "email": "ali.new@example.com"
+}
+
+### Get students by department
+GET http://localhost:3000/api/students/department/Software%20Engineering
+
+### Add course for student
+POST http://localhost:3000/api/students/1/courses
+Content-Type: application/json
+
+{
+  "course_code": "SWE308",
+  "course_name": "Server-Side Programming"
+}
+
+### Get courses for student
+GET http://localhost:3000/api/students/1/courses
+
+### Delete student
+DELETE http://localhost:3000/api/students/1

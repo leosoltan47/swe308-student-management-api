@@ -1,0 +1,18 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: swe308_student_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: swe308_demo
+      MYSQL_USER: swe308_user
+      MYSQL_PASSWORD: swe308_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - swe308_mysql_data:/var/lib/mysql
+
+volumes:
+  swe308_mysql_data:
