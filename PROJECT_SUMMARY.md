@@ -2,7 +2,7 @@
 
 This project is a SWE308 Student Management API built with Node.js, Express, and MySQL.
 
-## One-Sentence Summary
+# Summary
 
 I built a backend Student Management API using Express and MySQL, with CRUD operations, validation, department search, partial updates, and a second courses table connected by foreign key.
 
@@ -82,9 +82,9 @@ POST   /api/students/:id/courses
 GET    /api/students/:id/courses
 ```
 
-## What To Say To The Professor
+## just in case if brains forgets
 
-"I built a Student Management API using Node.js, Express, and MySQL. It supports full CRUD operations for students, validates email and department fields, allows searching students by department, supports partial updates, and includes a second courses table connected to students through a foreign key. I also used parameterised queries to prevent SQL injection and proper HTTP status codes for API responses."
+" built a Student Management API using Node.js, Express, and MySQL. It supports full CRUD operations for students, validates email and department fields, allows searching students by department, supports partial updates, and includes a second courses table connected to students through a foreign key. I also used parameterised queries to prevent SQL injection and proper HTTP status codes for API responses."
 
 ## Files To Open First
 
