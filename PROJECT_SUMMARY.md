@@ -93,4 +93,3 @@ GET    /api/students/:id/courses
 - `requests.http` - ready-to-run API requests
 - `REFLECTION.md` - assignment reflection answers
 - `sql/init.sql` - database schema and seed data
-- `AGENTS.md` - handoff notes for another AI

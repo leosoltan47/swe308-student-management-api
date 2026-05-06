@@ -18,19 +18,19 @@ For a quick explanation of the whole project, read [PROJECT_SUMMARY.md](PROJECT_
 
 ```text
 swe308-student-management-api/
-├── app.js
-├── .env.example
-├── config/
-│   └── db.js
-├── controllers/
-│   └── studentController.js
-├── routes/
-│   └── studentRoutes.js
-├── sql/
-│   └── init.sql
-├── tests/
-│   └── student-api.test.js
-└── REFLECTION.md
+|-- app.js
+|-- .env.example
+|-- config/
+|   `-- db.js
+|-- controllers/
+|   `-- studentController.js
+|-- routes/
+|   `-- studentRoutes.js
+|-- sql/
+|   `-- init.sql
+|-- tests/
+|   `-- student-api.test.js
+`-- REFLECTION.md
 ```
 
 ## Setup
