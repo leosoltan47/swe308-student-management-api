@@ -1,25 +1,25 @@
-# SWE308 Reflection Questions
+# Reflection Answers
 
 ## 1. Why is SQL injection dangerous, and how do parameterised queries prevent it?
 
-SQL injection is dangerous because an attacker can send input that becomes part of the SQL command. That can expose data, modify records, delete tables, or bypass checks.
+SQL injection is dangerous because an attacker can send input that changes the meaning of the SQL query. This could expose data, modify records, delete tables, or bypass checks.
 
-This project uses parameterised queries with `?` placeholders. The SQL structure stays fixed, and user input is sent separately as data. Because the database driver treats the values as values, input such as `'; DROP TABLE students; --` cannot become executable SQL.
+Parameterized queries prevent this by using `?` placeholders. The SQL command stays fixed, and the user input is passed separately as data.
 
 ## 2. Why should we check if a record exists before updating or deleting it?
 
-Checking the result of update and delete operations tells the API whether anything actually changed. If `affectedRows` is `0`, the student ID did not exist, so the API returns `404 Not Found`.
+When update or delete runs, MySQL tells us how many rows were affected. If `affectedRows` is `0`, then no student with that ID existed.
 
-Without this check, the API might return a success message even though no student was updated or deleted.
+The API should return `404 Not Found` instead of saying the operation succeeded.
 
 ## 3. Why is returning the correct HTTP status code important for client applications?
 
-Client applications use status codes to decide what happened and what to do next. For example:
+HTTP status codes help the client understand what happened.
 
-- `201 Created` means a new student was created.
-- `400 Bad Request` means the submitted data is invalid.
-- `404 Not Found` means the requested record does not exist.
-- `409 Conflict` means a duplicate value broke a unique database rule.
-- `500 Internal Server Error` means an unexpected server problem happened.
+- `201` means something was created.
+- `400` means the request data is invalid.
+- `404` means the record was not found.
+- `409` means there is a duplicate value.
+- `500` means an unexpected server error happened.
 
-Correct status codes make the API predictable and easier to debug.
+Correct status codes make the API easier to use and debug.

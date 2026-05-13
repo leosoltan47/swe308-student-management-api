@@ -5,6 +5,7 @@ function createStudentRouter(pool) {
   const router = express.Router();
   const controller = createStudentController(pool);
 
+  // More specific routes must come before "/:id".
   router.get("/", controller.getAllStudents);
   router.get("/department/:department", controller.getStudentsByDepartment);
   router.get("/:id/courses", controller.getCoursesByStudent);

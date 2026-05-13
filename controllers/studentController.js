@@ -70,25 +70,6 @@ function createStudentController(pool) {
       }
     },
 
-    async getStudentsByDepartment(req, res, next) {
-      try {
-        const department = req.params.department;
-
-        if (isBlank(department)) {
-          return res.status(400).json({ error: "department is required" });
-        }
-
-        const [rows] = await pool.execute(
-          "SELECT * FROM students WHERE department = ? ORDER BY id DESC",
-          [department],
-        );
-
-        return res.status(200).json(rows);
-      } catch (err) {
-        return next(err);
-      }
-    },
-
     async createStudent(req, res, next) {
       try {
         const errors = validateStudentPayload(req.body);
@@ -179,11 +160,17 @@ function createStudentController(pool) {
       }
     },
 
-    async getCoursesByStudent(req, res, next) {
+    async getStudentsByDepartment(req, res, next) {
       try {
+        const department = req.params.department;
+
+        if (isBlank(department)) {
+          return res.status(400).json({ error: "department is required" });
+        }
+
         const [rows] = await pool.execute(
-          "SELECT * FROM courses WHERE student_id = ? ORDER BY id DESC",
-          [req.params.id],
+          "SELECT * FROM students WHERE department = ? ORDER BY id DESC",
+          [department],
         );
 
         return res.status(200).json(rows);
@@ -224,6 +211,19 @@ function createStudentController(pool) {
         }
 
         return handleDatabaseError(err, res, next);
+      }
+    },
+
+    async getCoursesByStudent(req, res, next) {
+      try {
+        const [rows] = await pool.execute(
+          "SELECT * FROM courses WHERE student_id = ? ORDER BY id DESC",
+          [req.params.id],
+        );
+
+        return res.status(200).json(rows);
+      } catch (err) {
+        return next(err);
       }
     },
   };

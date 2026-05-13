@@ -4,9 +4,11 @@ require("dotenv").config({ quiet: true });
 const pool = require("./config/db");
 const { createStudentRouter } = require("./routes/studentRoutes");
 
+// createApp makes testing easier: real app uses MySQL, tests can pass a mock pool.
 function createApp(databasePool = pool) {
   const app = express();
 
+  // This lets Express read JSON bodies from POST and PUT requests.
   app.use(express.json());
 
   app.get("/", (req, res) => {

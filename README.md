@@ -1,92 +1,75 @@
-# SWE308 Student Management API
+# SWE308 Student Management API Rebuild
 
-Express + MySQL CRUD application for the SWE308 homework due on 06 May 2026.
+This is a from-scratch rebuild of the SWE308 Student Management API homework.
 
-For a quick explanation of the whole project, read [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md).
+The goal is not only to have working code, but to understand what every part does.
 
-## Features
+## What This Project Is
 
-- Create, read, update, and delete students.
-- Validate that email contains `@`.
-- Validate that department is not empty.
-- Search students by department.
-- Partial student updates with `PUT /api/students/:id`.
-- Second table, `courses`, connected to `students` with a foreign key.
-- Parameterised MySQL queries to prevent SQL injection.
+This is a backend API built with:
 
-## Project Structure
+- Node.js
+- Express
+- MySQL
+- mysql2
+- dotenv
+
+It manages students and their courses.
+
+## How The Project Is Organized
 
 ```text
-swe308-student-management-api/
-|-- app.js
-|-- .env.example
-|-- config/
-|   `-- db.js
-|-- controllers/
-|   `-- studentController.js
-|-- routes/
-|   `-- studentRoutes.js
-|-- sql/
-|   `-- init.sql
-|-- tests/
-|   `-- student-api.test.js
-`-- REFLECTION.md
+app.js                 Express app setup
+config/db.js           MySQL connection pool
+routes/studentRoutes.js API route list
+controllers/           Request logic and SQL queries
+sql/init.sql           Database schema and seed data
+tests/                 Automated API behavior tests
+requests.http          Manual demo requests
 ```
+
+## Step-By-Step Mental Model
+
+1. `app.js` starts Express and says where requests should go.
+2. `routes/studentRoutes.js` maps URLs to controller functions.
+3. `controllers/studentController.js` validates input, runs SQL, and returns JSON.
+4. `config/db.js` connects the app to MySQL.
+5. `sql/init.sql` creates the database tables.
 
 ## Setup
 
-1. Install dependencies:
-
-```bash
+```powershell
 npm install
-```
-
-2. Create `.env` from the example:
-
-```bash
 copy .env.example .env
 ```
 
-3. Start MySQL with Docker:
+Open `.env` and set your real MySQL password.
 
-```bash
-npm run db:up
-```
+Create the database and tables:
 
-This starts MySQL on port `3307` and automatically runs `sql/init.sql`.
-
-Alternative if you want to use your own local MySQL: create the database and tables manually.
-
-PowerShell:
-
-```bash
+```powershell
 Get-Content sql/init.sql | mysql -u root -p
 ```
 
-Command Prompt / Git Bash:
+If `mysql` is not recognized in PowerShell, use the full path to MySQL. Common examples:
 
-```bash
-mysql -u root -p < sql/init.sql
+```powershell
+Get-Content sql/init.sql | & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
 ```
 
-4. If you use your own local MySQL instead of Docker, edit `.env` and set your real MySQL connection:
+or, if you use XAMPP:
 
-```env
-PORT=3000
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=swe308_demo
+```powershell
+Get-Content sql/init.sql | & "C:\xampp\mysql\bin\mysql.exe" -u root -p
 ```
 
-5. Start the API:
+Start the API:
 
-```bash
+```powershell
 npm start
 ```
 
-The API runs at:
+Then open:
 
 ```text
 http://localhost:3000
@@ -94,69 +77,30 @@ http://localhost:3000
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
+| Method | Endpoint | Purpose |
 | --- | --- | --- |
-| GET | `/` | Health check |
+| GET | `/` | Check API is running |
 | GET | `/api/students` | Get all students |
 | GET | `/api/students/:id` | Get one student |
 | POST | `/api/students` | Create student |
 | PUT | `/api/students/:id` | Partially update student |
 | DELETE | `/api/students/:id` | Delete student |
-| GET | `/api/students/department/:department` | Get students by department |
-| GET | `/api/students/:id/courses` | Get courses for one student |
-| POST | `/api/students/:id/courses` | Add a course for one student |
-
-## Example Requests
-
-Create a student:
-
-```bash
-curl -X POST http://localhost:3000/api/students ^
-  -H "Content-Type: application/json" ^
-  -d "{\"student_no\":\"2024004\",\"first_name\":\"Ali\",\"last_name\":\"Demir\",\"email\":\"ali@example.com\",\"department\":\"Software Engineering\"}"
-```
-
-Partial update:
-
-```bash
-curl -X PUT http://localhost:3000/api/students/1 ^
-  -H "Content-Type: application/json" ^
-  -d "{\"email\":\"new.email@example.com\"}"
-```
-
-Get students by department:
-
-```bash
-curl http://localhost:3000/api/students/department/Software%20Engineering
-```
-
-Add a course connected to a student:
-
-```bash
-curl -X POST http://localhost:3000/api/students/1/courses ^
-  -H "Content-Type: application/json" ^
-  -d "{\"course_code\":\"SWE308\",\"course_name\":\"Server-Side Programming\"}"
-```
+| GET | `/api/students/department/:department` | Search by department |
+| POST | `/api/students/:id/courses` | Add course for student |
+| GET | `/api/students/:id/courses` | Get student's courses |
 
 ## Tests
 
-```bash
+```powershell
 npm test
 ```
 
-The tests cover CRUD behavior, validation, department search, partial update, missing delete handling, and creating a course linked to a student.
+The tests prove the API behavior before a live database demo.
 
-## Homework Mapping
+## Important Learning Points
 
-| Assignment Requirement | Implemented In |
-| --- | --- |
-| Express server | `app.js` |
-| MySQL connection pool | `config/db.js` |
-| Student routes | `routes/studentRoutes.js` |
-| CRUD controller logic | `controllers/studentController.js` |
-| `students` table | `sql/init.sql` |
-| Email and department validation | `controllers/studentController.js` |
-| `GET /api/students/department/:department` | `routes/studentRoutes.js` |
-| Partial update | `controllers/studentController.js` |
-| Second table with foreign key | `courses` table in `sql/init.sql` |
-| Reflection answers | `REFLECTION.md` |
+- `express.json()` is needed so Express can read JSON request bodies.
+- `?` placeholders in SQL protect against SQL injection.
+- `affectedRows` tells us whether update/delete actually found a record.
+- Validation should happen before database queries.
+- A foreign key connects `courses.student_id` to `students.id`.

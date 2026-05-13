@@ -4,7 +4,7 @@ GET http://localhost:3000/
 ### Get all students
 GET http://localhost:3000/api/students
 
-### Get student by id
+### Get one student
 GET http://localhost:3000/api/students/1
 
 ### Create student
@@ -19,28 +19,40 @@ Content-Type: application/json
   "department": "Software Engineering"
 }
 
-### Partial update student
+### Invalid student validation test
+POST http://localhost:3000/api/students
+Content-Type: application/json
+
+{
+  "student_no": "2024005",
+  "first_name": "Bad",
+  "last_name": "Input",
+  "email": "bad-email",
+  "department": ""
+}
+
+### Partial update
 PUT http://localhost:3000/api/students/1
 Content-Type: application/json
 
 {
-  "email": "ali.new@example.com"
+  "email": "alex.new@example.com"
 }
 
-### Get students by department
+### Search by department
 GET http://localhost:3000/api/students/department/Software%20Engineering
 
-### Add course for student
+### Add course to student
 POST http://localhost:3000/api/students/1/courses
 Content-Type: application/json
 
 {
-  "course_code": "SWE308",
-  "course_name": "Server-Side Programming"
+  "course_code": "SWE401",
+  "course_name": "Graduation Project"
 }
 
-### Get courses for student
+### Get student's courses
 GET http://localhost:3000/api/students/1/courses
 
 ### Delete student
-DELETE http://localhost:3000/api/students/1
+DELETE http://localhost:3000/api/students/3

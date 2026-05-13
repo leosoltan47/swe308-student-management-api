@@ -1,6 +1,7 @@
 const mysql = require("mysql2/promise");
 require("dotenv").config({ quiet: true });
 
+// A pool reuses database connections instead of opening a new one for every request.
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
   port: Number(process.env.DB_PORT || 3306),

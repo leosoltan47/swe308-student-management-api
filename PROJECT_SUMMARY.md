@@ -1,95 +1,42 @@
 # Project Summary
 
-This project is a SWE308 Student Management API built with Node.js, Express, and MySQL.
+This project is a Student Management API for SWE308.
 
-# Summary
+## Short Explanation
 
-I built a backend Student Management API using Express and MySQL, with CRUD operations, validation, department search, partial updates, and a second courses table connected by foreign key.
+I built a backend API using Node.js, Express, and MySQL. It supports CRUD operations for students, validates input, searches students by department, supports partial updates, and includes a second `courses` table connected to students by a foreign key.
 
-## What The Project Does
+## What It Can Do
 
-The API manages students in a MySQL database. It can:
-
-- create a student
-- list all students
-- get one student by ID
-- update a student
-- delete a student
-- search students by department
-- add courses connected to a student
-
-## Main Technologies
-
-- Node.js
-- Express
-- MySQL
-- mysql2
-- dotenv
-- Docker, optional but recommended for the demo database
+- Create students
+- List students
+- Get one student
+- Update only the fields provided
+- Delete students
+- Search by department
+- Add courses for students
+- List courses for a student
 
 ## Database Tables
 
-### `students`
+`students` stores:
 
-Stores student information:
+- student number
+- first name
+- last name
+- email
+- department
 
-- `id`
-- `student_no`
-- `first_name`
-- `last_name`
-- `email`
-- `department`
-- `created_at`
+`courses` stores:
 
-### `courses`
+- course code
+- course name
+- the student it belongs to
 
-Stores courses linked to students:
+## Main Technical Points
 
-- `id`
-- `student_id`
-- `course_code`
-- `course_name`
-- `created_at`
-
-`courses.student_id` is a foreign key connected to `students.id`.
-
-## Assignment Requirements Covered
-
-- Express server
-- MySQL database connection
-- CRUD operations for students
-- email validation
-- department validation
-- department search endpoint
-- partial update
-- second table with foreign key
-- reflection answers
-- GitHub repository
-- demo instructions
-- automated tests
-
-## Important API Endpoints
-
-```text
-GET    /
-GET    /api/students
-GET    /api/students/:id
-POST   /api/students
-PUT    /api/students/:id
-DELETE /api/students/:id
-GET    /api/students/department/:department
-POST   /api/students/:id/courses
-GET    /api/students/:id/courses
-```
-
-## just in case if brains forgets
-
-" built a Student Management API using Node.js, Express, and MySQL. It supports full CRUD operations for students, validates email and department fields, allows searching students by department, supports partial updates, and includes a second courses table connected to students through a foreign key. I also used parameterised queries to prevent SQL injection and proper HTTP status codes for API responses."
-
-## Files To Open First
-
-- `README.md` - setup and endpoint documentation
-- `PRESENTATION.md` - demo script and talking points
-- `requests.http` - ready-to-run API requests
-- `REFLECTION.md` - assignment reflection answers
-- `sql/init.sql` - database schema and seed data
+- Express handles the HTTP routes.
+- MySQL stores the data.
+- `mysql2/promise` lets the code use `async` and `await`.
+- Parameterized queries use `?` placeholders for security.
+- The project uses local MySQL; import `sql/init.sql` before starting the API.

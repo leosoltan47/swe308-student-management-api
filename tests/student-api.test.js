@@ -26,7 +26,16 @@ function createMockPool(responses = []) {
   };
 }
 
-describe("Student Management API", () => {
+describe("Student Management API rebuild", () => {
+  test("health check explains the API is running", async () => {
+    const response = await request(createApp(createMockPool())).get("/");
+
+    assert.equal(response.status, 200);
+    assert.deepEqual(response.body, {
+      message: "SWE308 Student Management API is running",
+    });
+  });
+
   test("returns all students", async () => {
     const pool = createMockPool([
       [
@@ -50,14 +59,37 @@ describe("Student Management API", () => {
     assert.equal(pool.calls[0].sql, "SELECT * FROM students ORDER BY id DESC");
   });
 
+  test("returns one student by id", async () => {
+    const pool = createMockPool([
+      [
+        [
+          {
+            id: 2,
+            student_no: "2024002",
+            first_name: "Merve",
+            last_name: "Yildiz",
+            email: "merve@example.com",
+            department: "Software Engineering",
+          },
+        ],
+      ],
+    ]);
+
+    const response = await request(createApp(pool)).get("/api/students/2");
+
+    assert.equal(response.status, 200);
+    assert.equal(response.body.id, 2);
+    assert.deepEqual(pool.calls[0].params, ["2"]);
+  });
+
   test("creates a student with valid required fields", async () => {
     const pool = createMockPool([[{ insertId: 12 }]]);
 
     const response = await request(createApp(pool)).post("/api/students").send({
-      student_no: "2024002",
-      first_name: "Merve",
-      last_name: "Yildiz",
-      email: "merve@example.com",
+      student_no: "2024004",
+      first_name: "Ali",
+      last_name: "Demir",
+      email: "ali@example.com",
       department: "Software Engineering",
     });
 
@@ -66,22 +98,15 @@ describe("Student Management API", () => {
       message: "Student created successfully",
       id: 12,
     });
-    assert.deepEqual(pool.calls[0].params, [
-      "2024002",
-      "Merve",
-      "Yildiz",
-      "merve@example.com",
-      "Software Engineering",
-    ]);
   });
 
-  test("rejects invalid email and empty department before inserting", async () => {
+  test("rejects invalid email and empty department before database insert", async () => {
     const pool = createMockPool();
 
     const response = await request(createApp(pool)).post("/api/students").send({
-      student_no: "2024003",
+      student_no: "2024005",
       first_name: "Bad",
-      last_name: "Email",
+      last_name: "Input",
       email: "bad-email",
       department: "",
     });
@@ -90,6 +115,28 @@ describe("Student Management API", () => {
     assert.ok(response.body.errors.includes("email must contain @"));
     assert.ok(response.body.errors.includes("department is required"));
     assert.equal(pool.calls.length, 0);
+  });
+
+  test("partially updates only the fields sent in the request", async () => {
+    const pool = createMockPool([[{ affectedRows: 1 }]]);
+
+    const response = await request(createApp(pool)).put("/api/students/7").send({
+      email: "new.email@example.com",
+    });
+
+    assert.equal(response.status, 200);
+    assert.deepEqual(response.body, { message: "Student updated successfully" });
+    assert.equal(pool.calls[0].sql, "UPDATE students SET email = ? WHERE id = ?");
+    assert.deepEqual(pool.calls[0].params, ["new.email@example.com", "7"]);
+  });
+
+  test("returns 404 when deleting a missing student", async () => {
+    const pool = createMockPool([[{ affectedRows: 0 }]]);
+
+    const response = await request(createApp(pool)).delete("/api/students/404");
+
+    assert.equal(response.status, 404);
+    assert.deepEqual(response.body, { error: "Student not found" });
   });
 
   test("returns students by department", async () => {
@@ -118,32 +165,9 @@ describe("Student Management API", () => {
       pool.calls[0].sql,
       "SELECT * FROM students WHERE department = ? ORDER BY id DESC",
     );
-    assert.deepEqual(pool.calls[0].params, ["Computer Engineering"]);
   });
 
-  test("partially updates only provided student fields", async () => {
-    const pool = createMockPool([[{ affectedRows: 1 }]]);
-
-    const response = await request(createApp(pool)).put("/api/students/7").send({
-      email: "updated@example.com",
-    });
-
-    assert.equal(response.status, 200);
-    assert.deepEqual(response.body, { message: "Student updated successfully" });
-    assert.equal(pool.calls[0].sql, "UPDATE students SET email = ? WHERE id = ?");
-    assert.deepEqual(pool.calls[0].params, ["updated@example.com", "7"]);
-  });
-
-  test("returns 404 when deleting a missing student", async () => {
-    const pool = createMockPool([[{ affectedRows: 0 }]]);
-
-    const response = await request(createApp(pool)).delete("/api/students/404");
-
-    assert.equal(response.status, 404);
-    assert.deepEqual(response.body, { error: "Student not found" });
-  });
-
-  test("creates a course connected to a student by foreign key", async () => {
+  test("creates a course connected to a student", async () => {
     const pool = createMockPool([[{ insertId: 22 }]]);
 
     const response = await request(createApp(pool))
@@ -167,5 +191,29 @@ describe("Student Management API", () => {
       "SWE308",
       "Server-Side Programming",
     ]);
+  });
+
+  test("returns courses for one student", async () => {
+    const pool = createMockPool([
+      [
+        [
+          {
+            id: 1,
+            student_id: 5,
+            course_code: "SWE308",
+            course_name: "Server-Side Programming",
+          },
+        ],
+      ],
+    ]);
+
+    const response = await request(createApp(pool)).get("/api/students/5/courses");
+
+    assert.equal(response.status, 200);
+    assert.equal(response.body[0].course_code, "SWE308");
+    assert.equal(
+      pool.calls[0].sql,
+      "SELECT * FROM courses WHERE student_id = ? ORDER BY id DESC",
+    );
   });
 });

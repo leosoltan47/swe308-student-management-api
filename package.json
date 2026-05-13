@@ -1,13 +1,11 @@
 {
-  "name": "swe308-student-management-api",
+  "name": "swe308-student-management-api-rebuild",
   "version": "1.0.0",
-  "description": "SWE308 Express and MySQL Student Management CRUD API homework.",
+  "description": "From-scratch guided rebuild of the SWE308 Student Management API.",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "node --watch app.js",
-    "db:up": "docker compose up -d",
-    "db:down": "docker compose down",
     "test": "node --test"
   },
   "keywords": [],
